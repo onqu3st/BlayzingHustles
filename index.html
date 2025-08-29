@@ -8,14 +8,232 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN for styling -->
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0d1117; /* Dark background color */
             color: #c9d1d9; /* Light text color */
+            overflow-x: hidden; /* Prevent horizontal scroll from modals */
         }
+
+        /* --- Modal Styles (Glassmorphic) --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(10, 25, 47, 0.7); /* Semi-transparent background with blue tint */
+            backdrop-filter: blur(10px); /* Blur effect */
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background: rgba(17, 34, 64, 0.5); /* Glass background */
+            border-radius: 18px;
+            box-shadow: 
+                0 12px 32px rgba(0, 0, 0, 0.4),
+                0 0 10px rgba(100, 255, 218, 0.2),
+                0 0 30px rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            margin: 5% auto; /* 15% from the top and centered */
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateY(30px) rotateX(10deg);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.6s ease;
+            color: #e6f1ff;
+        }
+
+        .modal-content.active {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+        }
+
+        /* Close Button */
+        .close {
+            color: #8892b0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #64ffda;
+        }
+
+        /* Modal Inner Glow */
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            padding: 1px;
+            background: linear-gradient(135deg, 
+                rgba(64, 255, 200, 0.15), 
+                rgba(0, 180, 255, 0.1), 
+                rgba(100, 255, 218, 0.25));
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Modal Shine */
+        .modal-content::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at 70% 30%,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.5;
+            transform: rotate(30deg);
+        }
+
+        /* --- 3D Card Styles (Adapted from Orion Path) --- */
+        .feature-card {
+            background: rgba(17, 34, 64, 0.25);
+            border-radius: 18px;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                0 0 8px rgba(100, 255, 218, 0.15),
+                0 0 20px rgba(100, 255, 218, 0.08);
+            overflow: hidden;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            width: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1), 
+                        box-shadow 0.5s ease, 
+                        scale 0.4s ease;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        /* Card Inner Glow */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            padding: 1px;
+            background: linear-gradient(135deg, 
+                rgba(64, 255, 200, 0.1), 
+                rgba(0, 180, 255, 0.05), 
+                rgba(100, 255, 218, 0.15));
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Card Shine */
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at 70% 30%,
+                rgba(255, 255, 255, 0.12) 0%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.4;
+            transform: rotate(30deg);
+        }
+
+        /* Card Hover Effects */
+        .feature-card:hover {
+            scale: 1.03;
+            transform: translateZ(25px) rotateX(6deg) rotateY(6deg);
+            box-shadow: 
+                0 20px 45px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(100, 255, 218, 0.3),
+                0 0 40px rgba(100, 255, 218, 0.2),
+                inset 0 0 25px rgba(100, 255, 218, 0.1);
+            border-color: #64ffda;
+            filter: brightness(1.08);
+        }
+
+        .feature-card:hover::before {
+            background: linear-gradient(135deg, 
+                rgba(100, 255, 218, 0.15), 
+                rgba(0, 220, 255, 0.1), 
+                rgba(100, 255, 218, 0.25));
+        }
+
+        .feature-card h3 {
+            color: #e6f1ff;
+            text-shadow: 0 0 8px rgba(100, 255, 218, 0.2);
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .feature-card:hover h3 {
+            color: #64ffda;
+            text-shadow: 0 0 12px rgba(100, 255, 218, 0.4);
+        }
+
+        .feature-card p {
+            color: #a8b2d1;
+        }
+
+        /* --- End 3D Card Styles --- */
+
+        /* Footer link styling */
+        footer a {
+            color: #64ffda;
+            text-decoration: none;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(100, 255, 218, 0.5);
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -42,27 +260,35 @@
         <hr class="border-t border-[#30363d] my-8">
 
         <!-- Value Proposition Section -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <!-- Feature 1 -->
-            <div class="space-y-3 bg-[#0d1117] p-6 rounded-xl border border-[#2d3136] shadow-md">
-                <h3 class="text-2xl font-semibold text-white"> 🎯 One Golden Idea. Weekly</h3>
-                <p class="text-gray-400">
-                    Cutting through the noise. Get a single, high-quality, actionable side hustle delivered to you.
-                </p>
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 Card -->
+            <div class="feature-card" onclick="openModal('modal1')">
+                <div class="space-y-3">
+                    <h3 class="text-2xl font-semibold"> 🎯 One Golden Idea. Weekly</h3>
+                    <p class="text-gray-400">
+                        Cutting through the noise. Get a single, high-quality, actionable side hustle delivered to you.
+                    </p>
+                </div>
             </div>
-            <!-- Feature 2 -->
-            <div class="space-y-3 bg-[#0d1117] p-6 rounded-xl border border-[#2d3136] shadow-md">
-                <h3 class="text-2xl font-semibold text-white">🤝Sourced from the Real World</h3>
-                <p class="text-gry-400">
-                    Ideas aren't just generated, they're unearthed from real conversations and real people.
-                </p>
+
+            <!-- Feature 2 Card -->
+            <div class="feature-card" onclick="openModal('modal2')">
+                <div class="space-y-3">
+                    <h3 class="text-2xl font-semibold">🤝 Sourced from the Real World</h3>
+                    <p class="text-gray-400">
+                        Ideas aren't just generated, they're unearthed from real conversations and real people.
+                    </p>
+                </div>
             </div>
-            <!-- Feature 3 -->
-            <div class="space-y-3 bg-[#0d1117] p-6 rounded-xl border border-[#2d3136] shadow-md">
-                <h3 class="text-2xl font-semibold text-white">🚀Built for Action</h3>
-                <p class="text-gray-400">
-                    We'll provide the facts and the first steps so you can get started today. No holds barred.
-                </p>
+
+            <!-- Feature 3 Card -->
+            <div class="feature-card" onclick="openModal('modal3')">
+                <div class="space-y-3">
+                    <h3 class="text-2xl font-semibold">🚀 Built for Action</h3>
+                    <p class="text-gray-400">
+                        We'll provide the facts and the first steps so you can get started today. No holds barred.
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -88,14 +314,131 @@
 
         <!-- Footer -->
         <footer class="text-center mt-12 text-sm text-gray-500">
-            &copy; <span id="current-year"></span> Blayze: The Quest. All rights reserved.
+            &copy; <span id="current-year"></span> <a href="https://onqu3st.github.io/BlayzingHustles/" target="_blank">Blayze: The Quest</a>. All rights reserved.
         </footer>
 
+    </div>
+
+    <!-- Modals -->
+    <!-- Modal 1 -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-3xl font-bold text-[#64ffda] mb-4">🎯 One Golden Idea. Weekly</h2>
+            <p class="text-lg text-[#c9d1d9] mb-4">
+                Tired of endless lists and "101 Ideas" that leave you overwhelmed and doing nothing? So are we.
+            </p>
+            <p class="text-[#a8b2d1] mb-4">
+                <strong>Blazing Hustles</strong> cuts through the noise. Every week, you get one single, laser-focused side hustle idea. Not a list. Not a theory. A real, actionable blueprint that you can start working on immediately.
+            </p>
+            <p class="text-[#a8b2d1]">
+                We do the research, the vetting, and the groundwork. You get the clear path. No more endless searching. Just one golden idea, delivered weekly, designed to fit into your life and help you build something real.
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal 2 -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-3xl font-bold text-[#64ffda] mb-4">🤝 Sourced from the Real World</h2>
+            <p class="text-lg text-[#c9d1d9] mb-4">
+                Forget generic AI-generated fluff. Our ideas come from the trenches.
+            </p>
+            <p class="text-[#a8b2d1] mb-4">
+                We dive into real communities, forums, and conversations. We talk to people who are actually building, failing, and succeeding with side hustles right now. We look at what's working, what's trending, and what problems people are desperate to solve.
+            </p>
+            <p class="text-[#a8b2d1]">
+                This isn't academic theory or wishful thinking. It's grounded in the messy, exciting reality of entrepreneurship. You get ideas that have a proven spark because they are born from real human need and real-world experimentation.
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal 3 -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-3xl font-bold text-[#64ffda] mb-4">🚀 Built for Action</h2>
+            <p class="text-lg text-[#c9d1d9] mb-4">
+                Knowing is not enough; you need to act. That's why every hustle we present is a launchpad.
+            </p>
+            <p class="text-[#a8b2d1] mb-4">
+                We don't just hand you an idea and walk away. We provide the essential facts: the core concept, the target audience, the basic tools needed, and a clear outline of the first few critical steps.
+            </p>
+            <p class="text-[#a8b2d1]">
+                Our breakdowns are concise and designed to get you moving. We tell you what to do first, where to find resources, and how to avoid common pitfalls. It's not a complete business plan; it's your first, clearest push forward. Get ready to build.
+            </p>
+        </div>
     </div>
 
     <script>
         // Set the current year in the footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- Modal Functionality ---
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = "block";
+                // Trigger the entrance animation
+                setTimeout(() => {
+                    const content = modal.querySelector('.modal-content');
+                    if (content) content.classList.add('active');
+                }, 10); // Small delay to ensure display:block is applied first
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                const content = modal.querySelector('.modal-content');
+                if (content) content.classList.remove('active');
+                // Wait for the exit animation to finish before hiding
+                setTimeout(() => {
+                    modal.style.display = "none";
+                }, 600); // Match the CSS transition duration
+            }
+        }
+
+        // Close button event listeners
+        document.querySelectorAll('.modal .close').forEach(button => {
+            button.addEventListener('click', function() {
+                const modalId = this.closest('.modal').id;
+                closeModal(modalId);
+            });
+        });
+
+        // Close modal when clicking outside the content
+        window.addEventListener('click', function(event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                 if (event.target === modal) {
+                    const modalId = modal.id;
+                    closeModal(modalId);
+                }
+            });
+        });
+
+        // Add 3D mouse move effect to cards (Optional enhancement)
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateY = ((x - centerX) / centerX) * 5;
+                const rotateX = ((centerY - y) / centerY) * 5;
+                
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(15px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
     </script>
 
 </body>
