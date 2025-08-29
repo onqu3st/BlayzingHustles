@@ -303,13 +303,28 @@
                 Join our free newsletter to get an in-depth, no-fluff guide .  Direct to your inbox, free of charge.
             </p>
             
-            <!-- Newsletter Form - placeholder for now, you will connect this to Listmonk -->
-            <form action="#" method="POST" class="mt-8 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <input type="email" placeholder="Enter your email" required class="w-full sm:w-80 px-5 py-3 rounded-full bg-[#0d1117] border border-[#30363d] text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
-                <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg transition-transform transform hover:scale-105">
-                    Join The Quest
-                </button>
-            </form>
+            <!-- Newsletter Form - placeholder for now, you will connect this to LEad capture -->
+            <form 
+  action="https://script.google.com/macros/s/AKfycby0nJuWCrLuQ_-Uq2s-bSeTWx5nzWqiYdROCEI_6HsrxmQj2CdxehT9NfULT6WkyOMJVw/exec" 
+  method="POST" 
+  class="mt-8 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+
+    <input type="email" name="email" placeholder="Enter your email" required 
+      class="w-full sm:w-80 px-5 py-3 rounded-full bg-[#0d1117] border border-[#30363d] text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
+    
+    <!-- Honeypot field (hidden from real users, helps block spam bots) -->
+    <input type="text" name="website" style="display:none">
+    
+    <!-- Optional hidden redirect field -->
+    <input type="hidden" name="redirect" value="https://onqu3st.github.io/BlayzingHustles/thankyou.html">
+    
+    <button type="submit" 
+      class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg transition-transform transform hover:scale-105">
+      Join The Quest
+    </button>
+</form>
+
+            
         </section>
 
         <!-- Footer -->
